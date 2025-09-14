@@ -49,12 +49,59 @@ A comprehensive multi-tenant delivery management platform built with Python micr
 - Workspace-specific settings
 - Failed delivery notifications
 
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Docker and Docker Compose
+- Node.js 18+ and npm (for frontend development)
+- Python 3.9+ (for local development)
+- PostgreSQL 13+ (if running locally)
+- Redis 6+ (if running locally)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd delox-delivery-system
+   ```
+
+2. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
+
+3. **Install frontend dependencies**
+   ```bash
+   make install-frontend
+   ```
+
+4. **Start the services**
+   ```bash
+   make up
+   ```
+
+5. **Initialize the database**
+   ```bash
+   make init-db
+   ```
+
+6. **Access the application**
+   - **Admin Dashboard**: http://localhost:3000
+   - **API Gateway**: http://localhost:8080
+   - **Traefik Dashboard**: http://localhost:8081
+
 ## 🛠️ Development Setup
 
 ```bash
 # Clone repository
 git clone <repository-url>
 cd delox
+
+# Install frontend dependencies
+make install-frontend
 
 # Start development environment
 docker-compose up -d
@@ -65,6 +112,7 @@ docker-compose exec order-service alembic upgrade head
 docker-compose exec courier-service alembic upgrade head
 
 # Access services
+# Admin Dashboard: http://localhost:3000
 # API Gateway: http://localhost:8080
 # User Service: http://localhost:8001
 # Order Service: http://localhost:8002
@@ -75,8 +123,18 @@ docker-compose exec courier-service alembic upgrade head
 
 ```
 delox/
+├── frontend/
+│   └── admin-dashboard/     # React Admin Dashboard
+│       ├── src/
+│       │   ├── components/  # Reusable components
+│       │   ├── pages/       # Page components
+│       │   ├── services/    # API services
+│       │   ├── contexts/    # React contexts
+│       │   └── types/       # TypeScript types
+│       ├── public/          # Static assets
+│       ├── package.json     # Dependencies
+│       └── Dockerfile       # Container config
 ├── services/
-│   ├── api-gateway/          # Traefik configuration
 │   ├── auth-service/         # Authentication & authorization
 │   ├── user-service/         # User & workspace management
 │   ├── order-service/        # Order management

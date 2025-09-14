@@ -39,6 +39,26 @@ install-dev:
 	cd services/user-service && pip install -r requirements.txt
 	cd services/order-service && pip install -r requirements.txt
 
+# Frontend development
+dev-frontend:
+	cd frontend/admin-dashboard && npm start
+
+install-frontend:
+	cd frontend/admin-dashboard && npm install
+
+build-frontend:
+	cd frontend/admin-dashboard && npm run build
+
+# Database commands
+init-db:
+	docker-compose exec postgres psql -U delox_user -d delox -f /docker-entrypoint-initdb.d/init-db.sql
+
+reset-db:
+	docker-compose down -v
+	docker-compose up -d postgres
+	sleep 5
+	make init-db
+
 test:
 	@echo "Running tests for all services..."
 	docker-compose exec auth-service pytest
