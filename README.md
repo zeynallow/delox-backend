@@ -188,6 +188,30 @@ docker-compose exec user-service pytest --cov=app
 
 See [deployment guide](docs/deployment.md) for production deployment instructions.
 
+## 📚 Documentation
+
+### 📖 Core Documentation
+- [**System Architecture**](docs/ARCHITECTURE.md) - Complete system design and architecture diagrams
+- [**Database Schema**](docs/DATABASE_SCHEMA.md) - Detailed database design and relationships
+- [**API Guide**](docs/API_GUIDE.md) - Complete API documentation with examples
+- [**Deployment Guide**](docs/DEPLOYMENT_GUIDE.md) - Production deployment strategies
+
+### 🔧 Technical Guides
+- [Development Setup](docs/DEVELOPMENT.md) - Local development environment
+- [Testing Guide](docs/TESTING.md) - Testing strategies and examples
+- [Security Guide](docs/SECURITY.md) - Security best practices
+- [Performance Guide](docs/PERFORMANCE.md) - Optimization and scaling
+
+### 📊 Diagrams and Schemas
+- **Architecture Diagrams**: Microservices, data flow, and deployment architecture
+- **Database ERD**: Entity relationships and multi-tenant design
+- **API Flow**: Authentication, request routing, and service communication
+- **Deployment Topology**: Docker Compose, Kubernetes, and cloud deployments
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
 ## 📄 License
 
 MIT License - see [LICENSE](LICENSE) file for details.

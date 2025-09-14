@@ -4,9 +4,46 @@ This guide provides comprehensive documentation for the Delox SaaS Delivery Mana
 
 ## 🔗 Base URLs
 
-- **Development**: `http://localhost:8080`
+- **Development**: `http://localhost:8080/api/v1`
+- **Staging**: `https://staging-api.delox.com/api/v1`
+- **Production**: `https://api.delox.com/api/v1`
 - **API Gateway**: All requests go through the API gateway
 - **Documentation**: `http://localhost:8080/docs` (Swagger UI)
+
+## 🏗️ API Architecture
+
+```mermaid
+graph TB
+    subgraph "Client Applications"
+        WEB[Web Dashboard]
+        MOBILE[Mobile App]
+        API_CLIENT[API Client]
+    end
+
+    subgraph "API Gateway"
+        TRAEFIK[Traefik Gateway<br/>:8080]
+    end
+
+    subgraph "Microservices"
+        AUTH[Auth Service<br/>:8001]
+        USER[User Service<br/>:8002]
+        ORDER[Order Service<br/>:8003]
+        COURIER[Courier Service<br/>:8004]
+        NOTIFY[Notification Service<br/>:8005]
+        ANALYTICS[Analytics Service<br/>:8006]
+    end
+
+    WEB --> TRAEFIK
+    MOBILE --> TRAEFIK
+    API_CLIENT --> TRAEFIK
+
+    TRAEFIK --> AUTH
+    TRAEFIK --> USER
+    TRAEFIK --> ORDER
+    TRAEFIK --> COURIER
+    TRAEFIK --> NOTIFY
+    TRAEFIK --> ANALYTICS
+```
 
 ## 🔐 Authentication
 
