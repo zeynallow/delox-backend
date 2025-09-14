@@ -22,6 +22,7 @@ REM Install frontend dependencies
 echo 📦 Installing frontend dependencies...
 cd frontend\admin-dashboard
 npm install
+
 if %errorlevel% neq 0 (
     echo ❌ Failed to install frontend dependencies. Please install Node.js first.
     pause

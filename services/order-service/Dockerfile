@@ -5,17 +5,18 @@ WORKDIR /app
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
-COPY requirements.txt .
+COPY services/order-service/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
-COPY . .
+# Copy shared modules first
+COPY shared/ /app/shared/
 
-# Copy shared modules
-COPY ../../shared /app/shared
+# Copy application code
+COPY services/order-service/ .
 
 # Create non-root user
 RUN useradd --create-home --shell /bin/bash app

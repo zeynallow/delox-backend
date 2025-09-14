@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # Database Services
   postgres:
@@ -55,17 +53,19 @@ services:
   # Microservices
   auth-service:
     build:
-      context: ./services/auth-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./services/auth-service/Dockerfile
     environment:
       - DATABASE_URL=postgresql://delox_user:delox_password@postgres:5432/delox
       - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://delox:delox_password@rabbitmq:5672/
       - JWT_SECRET_KEY=your-super-secret-jwt-key-change-in-production
       - JWT_ALGORITHM=HS256
       - JWT_ACCESS_TOKEN_EXPIRE_MINUTES=30
     depends_on:
       - postgres
       - redis
+      - rabbitmq
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.auth-service.rule=Host(`localhost`) && PathPrefix(`/api/v1/auth`)"
@@ -75,15 +75,17 @@ services:
 
   user-service:
     build:
-      context: ./services/user-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./services/user-service/Dockerfile
     environment:
       - DATABASE_URL=postgresql://delox_user:delox_password@postgres:5432/delox
       - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://delox:delox_password@rabbitmq:5672/
       - AUTH_SERVICE_URL=http://auth-service:8000
     depends_on:
       - postgres
       - redis
+      - rabbitmq
       - auth-service
     labels:
       - "traefik.enable=true"
@@ -94,8 +96,8 @@ services:
 
   order-service:
     build:
-      context: ./services/order-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./services/order-service/Dockerfile
     environment:
       - DATABASE_URL=postgresql://delox_user:delox_password@postgres:5432/delox
       - REDIS_URL=redis://redis:6379
@@ -117,8 +119,8 @@ services:
 
   courier-service:
     build:
-      context: ./services/courier-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./services/courier-service/Dockerfile
     environment:
       - DATABASE_URL=postgresql://delox_user:delox_password@postgres:5432/delox
       - REDIS_URL=redis://redis:6379
@@ -141,8 +143,8 @@ services:
 
   notification-service:
     build:
-      context: ./services/notification-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./services/notification-service/Dockerfile
     environment:
       - DATABASE_URL=postgresql://delox_user:delox_password@postgres:5432/delox
       - REDIS_URL=redis://redis:6379
@@ -165,8 +167,8 @@ services:
 
   analytics-service:
     build:
-      context: ./services/analytics-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./services/analytics-service/Dockerfile
     environment:
       - DATABASE_URL=postgresql://delox_user:delox_password@postgres:5432/delox
       - REDIS_URL=redis://redis:6379

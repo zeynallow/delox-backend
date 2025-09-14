@@ -356,13 +356,14 @@ const OrdersPage: React.FC = () => {
                 columns={columns}
                 paginationMode="server"
                 rowCount={totalCount}
-                page={page}
-                pageSize={pageSize}
-                onPageChange={setPage}
-                onPageSizeChange={setPageSize}
-                rowsPerPageOptions={[10, 25, 50, 100]}
+                paginationModel={{ page, pageSize }}
+                onPaginationModelChange={(model) => {
+                  setPage(model.page);
+                  setPageSize(model.pageSize);
+                }}
+                pageSizeOptions={[10, 25, 50, 100]}
                 loading={isLoading}
-                disableSelectionOnClick
+                disableRowSelectionOnClick
                 autoHeight
                 sx={{
                   border: 'none',

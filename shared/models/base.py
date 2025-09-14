@@ -53,6 +53,7 @@ class BaseSchema(BaseModel):
     class Config:
         from_attributes = True
         use_enum_values = True
+        arbitrary_types_allowed = True
 
 
 class TimestampSchema(BaseSchema):
