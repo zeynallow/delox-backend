@@ -10,7 +10,7 @@ from fastapi.responses import JSONResponse
 
 from shared.utils.database import init_database
 from shared.utils.messaging import init_messaging
-from .models import Base
+from shared.models.base import Base
 from .routers import notifications, templates, preferences, campaigns, webhooks, health
 
 
@@ -31,9 +31,9 @@ async def lifespan(app: FastAPI):
     init_messaging("notification-service")
     
     # Initialize notification providers
-    from .services.provider_service import ProviderService
-    provider_service = ProviderService()
-    provider_service.initialize_providers()
+    # from .services.provider_service import ProviderService
+    # provider_service = ProviderService()
+    # provider_service.initialize_providers()
     
     print("✅ Notification Service started successfully")
     

@@ -44,8 +44,8 @@ class CourierCreate(BaseModel):
     vehicle_plate: Optional[str] = None
     vehicle_capacity: Optional[int] = Field(None, ge=1)
     max_delivery_distance: Optional[int] = Field(None, ge=1)
-    working_hours_start: Optional[str] = Field(None, regex=r"^([01]?[0-9]|2[0-3]):[0-5][0-9]$")
-    working_hours_end: Optional[str] = Field(None, regex=r"^([01]?[0-9]|2[0-3]):[0-5][0-9]$")
+    working_hours_start: Optional[str] = Field(None, pattern=r"^([01]?[0-9]|2[0-3]):[0-5][0-9]$")
+    working_hours_end: Optional[str] = Field(None, pattern=r"^([01]?[0-9]|2[0-3]):[0-5][0-9]$")
     working_days: Optional[List[int]] = Field(None, min_items=1, max_items=7)
 
 
@@ -57,8 +57,8 @@ class CourierUpdate(BaseModel):
     vehicle_plate: Optional[str] = None
     vehicle_capacity: Optional[int] = Field(None, ge=1)
     max_delivery_distance: Optional[int] = Field(None, ge=1)
-    working_hours_start: Optional[str] = Field(None, regex=r"^([01]?[0-9]|2[0-3]):[0-5][0-9]$")
-    working_hours_end: Optional[str] = Field(None, regex=r"^([01]?[0-9]|2[0-3]):[0-5][0-9]$")
+    working_hours_start: Optional[str] = Field(None, pattern=r"^([01]?[0-9]|2[0-3]):[0-5][0-9]$")
+    working_hours_end: Optional[str] = Field(None, pattern=r"^([01]?[0-9]|2[0-3]):[0-5][0-9]$")
     working_days: Optional[List[int]] = Field(None, min_items=1, max_items=7)
     device_token: Optional[str] = None
 
@@ -248,7 +248,7 @@ class CourierDashboard(BaseModel):
 
 class TaskAction(BaseModel):
     """Task action from mobile app"""
-    action: str = Field(..., regex="^(start|complete|fail|skip)$")
+    action: str = Field(..., pattern="^(start|complete|fail|skip)$")
     latitude: Optional[Decimal] = Field(None, ge=-90, le=90)
     longitude: Optional[Decimal] = Field(None, ge=-180, le=180)
     notes: Optional[str] = None

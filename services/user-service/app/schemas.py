@@ -16,19 +16,19 @@ class WorkspaceBase(BaseModel):
     """Base workspace schema"""
     name: str = Field(..., min_length=1, max_length=255)
     description: Optional[str] = None
-    primary_color: str = Field("#007bff", regex=r"^#[0-9A-Fa-f]{6}$")
+    primary_color: str = Field("#007bff", pattern=r"^#[0-9A-Fa-f]{6}$")
 
 
 class WorkspaceCreate(WorkspaceBase):
     """Workspace creation schema"""
-    slug: Optional[str] = Field(None, min_length=3, max_length=100, regex=r"^[a-z0-9-]+$")
+    slug: Optional[str] = Field(None, min_length=3, max_length=100, pattern=r"^[a-z0-9-]+$")
 
 
 class WorkspaceUpdate(BaseModel):
     """Workspace update schema"""
     name: Optional[str] = Field(None, min_length=1, max_length=255)
     description: Optional[str] = None
-    primary_color: Optional[str] = Field(None, regex=r"^#[0-9A-Fa-f]{6}$")
+    primary_color: Optional[str] = Field(None, pattern=r"^#[0-9A-Fa-f]{6}$")
     logo_url: Optional[str] = None
     webhook_url: Optional[str] = None
     settings: Optional[Dict[str, Any]] = None

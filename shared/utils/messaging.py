@@ -24,12 +24,31 @@ class MessageQueue:
         self.channel = None
     
     def connect(self):
-        """Establish connection to RabbitMQ"""
-        if not self.connection or self.connection.is_closed:
-            self.connection = pika.BlockingConnection(
-                pika.URLParameters(self.rabbitmq_url)
-            )
-            self.channel = self.connection.channel()
+        """Establish connection to RabbitMQ with retry"""
+        import time
+        max_retries = 5
+        retry_delay = 2
+
+        for attempt in range(max_retries):
+            try:
+                if not self.connection or self.connection.is_closed:
+                    self.connection = pika.BlockingConnection(
+                        pika.URLParameters(self.rabbitmq_url)
+                    )
+                    self.channel = self.connection.channel()
+                    print(f"✅ Connected to RabbitMQ on attempt {attempt + 1}")
+                    return
+            except Exception as e:
+                print(f"❌ RabbitMQ connection attempt {attempt + 1} failed: {e}")
+                if attempt < max_retries - 1:
+                    print(f"⏳ Retrying in {retry_delay} seconds...")
+                    time.sleep(retry_delay)
+                    retry_delay *= 2  # Exponential backoff
+                else:
+                    print("🚨 Failed to connect to RabbitMQ after all retries")
+                    # Don't raise exception, just log and continue
+                    self.connection = None
+                    self.channel = None
     
     def disconnect(self):
         """Close connection to RabbitMQ"""
@@ -39,25 +58,43 @@ class MessageQueue:
     def declare_exchange(self, exchange_name: str, exchange_type: str = "topic"):
         """Declare an exchange"""
         self.connect()
-        self.channel.exchange_declare(
-            exchange=exchange_name,
-            exchange_type=exchange_type,
-            durable=True
-        )
+        if self.channel:
+            try:
+                self.channel.exchange_declare(
+                    exchange=exchange_name,
+                    exchange_type=exchange_type,
+                    durable=True
+                )
+            except Exception as e:
+                print(f"❌ Failed to declare exchange {exchange_name}: {e}")
+        else:
+            print(f"⚠️ No RabbitMQ connection, skipping exchange declaration for {exchange_name}")
     
     def declare_queue(self, queue_name: str, durable: bool = True):
         """Declare a queue"""
         self.connect()
-        self.channel.queue_declare(queue=queue_name, durable=durable)
-    
+        if self.channel:
+            try:
+                self.channel.queue_declare(queue=queue_name, durable=durable)
+            except Exception as e:
+                print(f"❌ Failed to declare queue {queue_name}: {e}")
+        else:
+            print(f"⚠️ No RabbitMQ connection, skipping queue declaration for {queue_name}")
+
     def bind_queue(self, queue_name: str, exchange_name: str, routing_key: str):
         """Bind queue to exchange with routing key"""
         self.connect()
-        self.channel.queue_bind(
-            exchange=exchange_name,
-            queue=queue_name,
-            routing_key=routing_key
-        )
+        if self.channel:
+            try:
+                self.channel.queue_bind(
+                    exchange=exchange_name,
+                    queue=queue_name,
+                    routing_key=routing_key
+                )
+            except Exception as e:
+                print(f"❌ Failed to bind queue {queue_name} to {exchange_name}: {e}")
+        else:
+            print(f"⚠️ No RabbitMQ connection, skipping queue binding for {queue_name}")
     
     def publish_message(
         self,
@@ -68,24 +105,31 @@ class MessageQueue:
     ):
         """Publish message to exchange"""
         self.connect()
-        
-        # Add metadata
-        message_data = {
-            "id": message_id or str(uuid4()),
-            "timestamp": datetime.utcnow().isoformat(),
-            "data": message
-        }
-        
-        self.channel.basic_publish(
-            exchange=exchange_name,
-            routing_key=routing_key,
-            body=json.dumps(message_data),
-            properties=pika.BasicProperties(
-                delivery_mode=2,  # Make message persistent
-                message_id=message_data["id"],
-                timestamp=int(datetime.utcnow().timestamp())
+
+        if not self.channel:
+            print(f"⚠️ No RabbitMQ connection, skipping message publish to {exchange_name}")
+            return
+
+        try:
+            # Add metadata
+            message_data = {
+                "id": message_id or str(uuid4()),
+                "timestamp": datetime.utcnow().isoformat(),
+                "data": message
+            }
+
+            self.channel.basic_publish(
+                exchange=exchange_name,
+                routing_key=routing_key,
+                body=json.dumps(message_data),
+                properties=pika.BasicProperties(
+                    delivery_mode=2,  # Make message persistent
+                    message_id=message_data["id"],
+                    timestamp=int(datetime.utcnow().timestamp())
+                )
             )
-        )
+        except Exception as e:
+            print(f"❌ Failed to publish message to {exchange_name}: {e}")
     
     def consume_messages(
         self,

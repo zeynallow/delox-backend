@@ -197,32 +197,6 @@ services:
       - REACT_APP_API_URL=http://localhost:8080/api/v1
     networks:
       - delox-network
-    depends_on:
-      - api-gateway
-
-  # API Gateway (Traefik)
-  api-gateway:
-    image: traefik:v2.10
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-    ports:
-      - "8080:80"
-      - "8081:8080"  # Traefik dashboard
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    networks:
-      - delox-network
-    depends_on:
-      - auth-service
-      - user-service
-      - order-service
-      - courier-service
-      - notification-service
-      - analytics-service
 
 volumes:
   postgres_data:

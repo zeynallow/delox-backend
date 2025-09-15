@@ -10,7 +10,7 @@ from fastapi.responses import JSONResponse
 
 from shared.utils.database import init_database
 from shared.utils.messaging import init_messaging
-from .models import Base
+from shared.models.base import Base
 from .routers import users, workspaces, health
 
 

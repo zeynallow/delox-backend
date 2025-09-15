@@ -70,7 +70,7 @@ class NotificationCreate(BaseModel):
     notification_type: NotificationType
     recipient_user_id: Optional[UUID] = None
     recipient_email: Optional[EmailStr] = None
-    recipient_phone: Optional[str] = Field(None, regex=r"^\+?[1-9]\d{1,14}$")
+    recipient_phone: Optional[str] = Field(None, pattern=r"^\+?[1-9]\d{1,14}$")
     recipient_device_token: Optional[str] = None
     subject: Optional[str] = Field(None, max_length=500)
     body: str = Field(..., min_length=1)
@@ -120,8 +120,8 @@ class NotificationPreferenceUpdate(BaseModel):
     delivery_notifications: Optional[bool] = None
     system_notifications: Optional[bool] = None
     marketing_notifications: Optional[bool] = None
-    quiet_hours_start: Optional[str] = Field(None, regex=r"^([01]?[0-9]|2[0-3]):[0-5][0-9]$")
-    quiet_hours_end: Optional[str] = Field(None, regex=r"^([01]?[0-9]|2[0-3]):[0-5][0-9]$")
+    quiet_hours_start: Optional[str] = Field(None, pattern=r"^([01]?[0-9]|2[0-3]):[0-5][0-9]$")
+    quiet_hours_end: Optional[str] = Field(None, pattern=r"^([01]?[0-9]|2[0-3]):[0-5][0-9]$")
     timezone: Optional[str] = None
     max_emails_per_day: Optional[int] = Field(None, ge=1, le=50)
     max_sms_per_day: Optional[int] = Field(None, ge=1, le=20)
@@ -163,7 +163,7 @@ class NotificationCampaignUpdate(BaseModel):
     campaign_name: Optional[str] = Field(None, min_length=1, max_length=255)
     description: Optional[str] = None
     scheduled_at: Optional[datetime] = None
-    status: Optional[str] = Field(None, regex="^(draft|scheduled|running|completed|failed|cancelled)$")
+    status: Optional[str] = Field(None, pattern="^(draft|scheduled|running|completed|failed|cancelled)$")
     send_rate_per_minute: Optional[int] = Field(None, ge=1, le=1000)
     metadata: Optional[Dict[str, Any]] = None
 

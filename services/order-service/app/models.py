@@ -73,7 +73,7 @@ class Order(BaseEntity):
     failure_reason = Column(Text, nullable=True)
     
     # Metadata
-    metadata = Column(JSON, default=dict, nullable=False)
+    meta_data = Column(JSON, default=dict, nullable=False)
     tags = Column(JSON, default=list, nullable=False)
     
     # Relationships
@@ -98,7 +98,7 @@ class OrderStatusHistory(BaseEntity):
     longitude = Column(DECIMAL(11, 8), nullable=True)
     
     # Additional data
-    metadata = Column(JSON, default=dict, nullable=False)
+    meta_data = Column(JSON, default=dict, nullable=False)
     
     # Relationships
     order = relationship("Order", back_populates="status_history")
@@ -127,7 +127,7 @@ class OrderTrackingEvent(BaseEntity):
     source_id = Column(UUID(as_uuid=True), nullable=True)  # ID of the source (user, courier, etc.)
     
     # Additional data
-    metadata = Column(JSON, default=dict, nullable=False)
+    meta_data = Column(JSON, default=dict, nullable=False)
     
     # Relationships
     order = relationship("Order", back_populates="tracking_events")

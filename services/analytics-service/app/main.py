@@ -10,7 +10,7 @@ from fastapi.responses import JSONResponse
 
 from shared.utils.database import init_database
 from shared.utils.messaging import init_messaging
-from .models import Base
+from shared.models.base import Base
 from .routers import analytics, reports, metrics, alerts, health
 
 
@@ -31,9 +31,9 @@ async def lifespan(app: FastAPI):
     init_messaging("analytics-service")
     
     # Start background tasks for metrics aggregation
-    from .services.aggregation_service import AggregationService
-    aggregation_service = AggregationService()
-    aggregation_service.start_background_tasks()
+    # from .services.aggregation_service import AggregationService
+    # aggregation_service = AggregationService()
+    # aggregation_service.start_background_tasks()
     
     print("✅ Analytics Service started successfully")
     

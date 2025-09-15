@@ -38,6 +38,12 @@ class SoftDeleteMixin:
     deleted_at = Column(DateTime, nullable=True)
 
 
+# Aliases for backward compatibility
+WorkspaceEntity = WorkspaceMixin
+TimestampEntity = TimestampMixin
+SoftDeleteEntity = SoftDeleteMixin
+
+
 class BaseEntity(Base, UUIDMixin, TimestampMixin, WorkspaceMixin, SoftDeleteMixin):
     """Base entity class with all common mixins"""
     __abstract__ = True
