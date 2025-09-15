@@ -48,7 +48,8 @@ class AuthService:
         user = AuthUser(
             email=email,
             password_hash=password_hash,
-            status=UserStatus.PENDING,
+#             status=UserStatus.PENDING,
+            status=UserStatus.ACTIVE,
             verification_token=verification_token,
             verification_token_expires=verification_expires
         )
